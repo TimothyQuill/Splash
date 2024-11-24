@@ -1,3 +1,6 @@
+"""
+High-level training process.
+"""
 import torch.nn as nn
 import torch.optim as optim
 
@@ -11,8 +14,8 @@ from helper import *
 # Generate the data
 x = torch.Tensor(generate_dataset())
 
-# Normalise the data
-x = normalise(x)
+# Scale the data to unit range
+x = minmax_scaling(x)
 
 # Split into X and Y
 X, Y = x_y_split(x)
@@ -48,5 +51,4 @@ for epoch in range(EPOCHS):
     train_losses.append(train_loss)
     test_losses.append(test_loss)
     plot_loss(train_losses, test_losses)
-    # Save the model checkpoint
     save_model(model, epoch)

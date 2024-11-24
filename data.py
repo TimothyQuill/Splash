@@ -56,9 +56,15 @@ def pad_padded_data(padded_data):
     While generate_variable_length_data enforces this at a per-batch
     level, when dealing with multiple batches, this isn't guaranteed.
 
-    :return:
+    Args:
+        padded_data (numpy.ndarray): Data of shape (batch_size,
+            channels, max_seq_len) with zero-padding.
+
+    Returns:
+        padded_padded_data (numpy.ndarray): Data of shape (batch_size,
+            channels, seq_len) with zero-padding.
     """
-    result = np.zeros([*padded_data.shape[:2], SEQ_LEN])
+    padded_padded_data = np.zeros([*padded_data.shape[:2], SEQ_LEN])
 
     for i in range(padded_data.shape[0]):
         for j in range(padded_data.shape[1]):
@@ -69,15 +75,35 @@ def pad_padded_data(padded_data):
                 padding = np.zeros(SEQ_LEN - len(sequence), dtype=sequence.dtype)
                 sequence = np.concatenate([sequence, padding])
 
-            result[i, j] = sequence
+            padded_padded_data[i, j] = sequence
 
-    return result
+    return padded_padded_data
 
 
 def generate_batch():
+    """
+    Wrapper function to return a padded batch of data
+
+    Args:
+        -
+
+    Returns:
+        padded_padded_data (numpy.ndarray): Data of shape (batch_size,
+            channels, seq_len) with zero-padding.
+    """
     padded_data, _ = generate_variable_length_data(BATCH_SIZE, channels=N_CHANNELS)
     return pad_padded_data(padded_data)
 
 
 def generate_dataset():
+    """
+    Create a set of batches of padded data.
+
+    Args:
+        -
+
+    Returns:
+        result (numpy.ndarray): Data of shape (n_batches,
+            batch_size, channels, seq_len) with zero-padding.
+    """
     return np.array([generate_batch() for _ in range(N_BATCHES)])

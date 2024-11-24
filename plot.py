@@ -13,8 +13,8 @@ def plot_loss(train, test, save_path="loss.jpg"):
         None
     """
     plt.figure(figsize=(8, 6))
-    plt.plot(train, label="Train Loss", color="blue", linestyle="-")
-    plt.plot(test, label="Test Loss", color="orange", linestyle="--")
+    plt.plot(train[1:], label="Train Loss", color="blue", linestyle="-")
+    plt.plot(test[1:], label="Test Loss", color="orange", linestyle="--")
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
     plt.title("Training and Testing Loss")
