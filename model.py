@@ -16,10 +16,12 @@ def generate_local_mask(seq_len):
 
 
 class LocalAttention(nn.Module):
-    def __init__(self, d_model):
+    def __init__(self):
         super(LocalAttention, self).__init__()
         self.transformer = nn.Transformer(
-            d_model=d_model, nhead=N_HEAD, num_encoder_layers=N_LAYERS)
+            d_model=D_MODEL,
+            nhead=N_HEAD,
+            num_encoder_layers=N_LAYERS)
 
     def forward(self, src, tgt):
         src_len = src.size(0)  # Source sequence length
@@ -33,21 +35,20 @@ class LocalAttention(nn.Module):
 
 
 class SequenceTransformer(nn.Module):
-    def __init__(self, d_model=64):
+    def __init__(self):
         super(SequenceTransformer, self).__init__()
-        self.d_model = d_model
 
         # Input embedding
-        self.input_embedding = nn.Linear(N_CHANNELS, d_model)
+        self.input_embedding = nn.Linear(N_CHANNELS, D_MODEL)
 
         # Positional encoding
-        self.positional_encoding = nn.Embedding(GIVEN_SEQ + TARGET_SEQ, d_model)
+        self.positional_encoding = nn.Embedding(GIVEN_SEQ + TARGET_SEQ, D_MODEL)
 
         # Localized attention transformer
-        self.local_attention = LocalAttention(d_model)
+        self.local_attention = LocalAttention()
 
         # Output projection
-        self.fc_out = nn.Linear(d_model, N_CHANNELS)
+        self.fc_out = nn.Linear(D_MODEL, N_CHANNELS)
 
     def forward(self, src, tgt):
         """
